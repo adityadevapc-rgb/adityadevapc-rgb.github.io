@@ -2,364 +2,356 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anscom Finance | Institutional Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Anscom Finance | Institutional Terminal</title>
     
-    <!-- Google Fonts: 'Inter' for UI, 'Share Tech Mono' for Terminal effects -->
+    <!-- Fonts: Inter (UI) & JetBrains Mono (Data) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-    <!-- GSAP for Professional Animations -->
+    <!-- GSAP Animation Engine -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
     <style>
         :root {
-            /* DARK THEME (DEFAULT) */
-            --bg-color: #050505;
-            --card-bg: #111111;
-            --text-main: #EAEAEA;
-            --text-muted: #888888;
+            /* DARK THEME (NASDAQ STYLE) */
+            --bg-body: #050505;
+            --bg-card: #121212;
+            --bg-panel: #1A1A1A;
+            --text-primary: #FFFFFF;
+            --text-secondary: #8E8E93;
             --accent-gold: #D4AF37;
-            --accent-cyber: #00f2ea; /* For Intro/Tech feel */
-            --border-color: #222222;
-            --up-color: #22ab94;
-            --down-color: #f7525f;
-            --font-main: 'Inter', sans-serif;
-            --font-mono: 'Share Tech Mono', monospace;
-            --nav-bg: rgba(5, 5, 5, 0.9);
+            --accent-blue: #007AFF; /* Nasdaq Blue */
+            --border-color: #2C2C2E;
+            --success: #30D158;
+            --danger: #FF453A;
+            
+            --font-ui: 'Inter', sans-serif;
+            --font-data: 'JetBrains Mono', monospace;
+            
+            --nav-height: 60px;
+            --ticker-height: 46px;
         }
 
-        /* LIGHT THEME OVERRIDES */
+        /* LIGHT THEME */
         body.light-theme {
-            --bg-color: #F0F3F9;
-            --card-bg: #FFFFFF;
-            --text-main: #1A1A1A;
-            --text-muted: #555555;
-            --border-color: #D1D5DB;
-            --nav-bg: rgba(255, 255, 255, 0.9);
-            --accent-cyber: #0056b3;
+            --bg-body: #F2F2F7;
+            --bg-card: #FFFFFF;
+            --bg-panel: #F9F9F9;
+            --text-primary: #000000;
+            --text-secondary: #666666;
+            --border-color: #D1D1D6;
+            --accent-blue: #0056D2;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: var(--font-main);
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            font-family: var(--font-ui);
             overflow-x: hidden;
-            transition: background-color 0.5s ease, color 0.5s ease;
+            /* Subtle Grid Pattern */
+            background-image: linear-gradient(var(--border-color) 1px, transparent 1px),
+            linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: center top;
         }
 
         /* =========================================
-           INTRO / SECURITY LAYER (Full Screen)
+           1. INTRO / SECURITY LAYER (Mobile Friendly)
            ========================================= */
         #intro-layer {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            height: 100%;
             background-color: #000;
             z-index: 9999;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
+            padding: 20px;
         }
 
-        .intro-content {
+        .intro-container {
+            width: 100%;
+            max-width: 400px;
             text-align: center;
-            max-width: 600px;
-            padding: 40px;
         }
 
-        /* Step 1: Warning */
-        .warning-box {
-            border: 1px solid var(--down-color);
-            padding: 30px;
-            background: rgba(247, 82, 95, 0.05);
+        /* Warning Box */
+        .security-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            background: rgba(255, 69, 58, 0.15);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            font-family: var(--font-data);
+            font-size: 0.75rem;
+            letter-spacing: 1px;
             margin-bottom: 20px;
-            display: block; /* Visible initially */
-        }
-
-        .warning-title {
-            color: var(--down-color);
-            font-family: var(--font-mono);
-            font-size: 1.2rem;
-            letter-spacing: 2px;
-            margin-bottom: 15px;
             text-transform: uppercase;
         }
 
-        .warning-text {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            line-height: 1.6;
+        .intro-title {
+            font-size: 1.5rem;
+            font-weight: 700;
             margin-bottom: 30px;
+            line-height: 1.4;
         }
 
         /* Buttons */
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
         .btn {
-            padding: 12px 30px;
-            font-family: var(--font-mono);
-            font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 16px;
+            font-family: var(--font-data);
+            font-weight: 700;
             cursor: pointer;
-            border: 1px solid var(--accent-cyber);
-            background: transparent;
-            color: var(--accent-cyber);
-            transition: all 0.3s ease;
-            margin: 0 10px;
+            text-transform: uppercase;
+            transition: all 0.2s;
+            border-radius: 4px;
         }
 
-        .btn:hover {
-            background: var(--accent-cyber);
-            color: #000;
-            box-shadow: 0 0 20px rgba(0, 242, 234, 0.4);
-        }
+        .btn:active { transform: scale(0.98); }
+        .btn-primary:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+        .btn-danger:hover { border-color: var(--danger); color: var(--danger); }
 
-        .btn-danger {
-            border-color: var(--down-color);
-            color: var(--down-color);
-        }
-        .btn-danger:hover {
-            background: var(--down-color);
-            color: #fff;
-            box-shadow: 0 0 20px rgba(247, 82, 95, 0.4);
-        }
-
-        /* Step 2: Identity */
-        #step-identity {
-            display: none;
-            opacity: 0;
-        }
-
-        .identity-question {
-            font-size: 2rem;
-            font-weight: 300;
-            margin-bottom: 40px;
-        }
-
-        /* Step 3: Welcome */
-        #step-welcome {
-            display: none;
-            opacity: 0;
-        }
-
-        .welcome-msg {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--accent-gold);
-            margin-bottom: 10px;
-        }
-        
-        .sub-welcome {
-            font-family: var(--font-mono);
-            color: var(--accent-cyber);
+        /* Welcome Text */
+        #step-welcome { display: none; }
+        .welcome-text {
+            font-size: 1.8rem;
+            background: linear-gradient(45deg, #fff, #888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
         }
 
         /* =========================================
-           MAIN DASHBOARD LAYOUT
+           2. MAIN APP STRUCTURE
            ========================================= */
-        #main-dashboard {
-            opacity: 0; /* Hidden initially */
-            display: none; /* Removed from flow initially */
+        #app-container {
+            opacity: 0; /* Hidden until intro done */
+            padding-bottom: 40px;
         }
 
         /* Ticker Tape */
         #ticker-tape {
-            width: 100%;
-            height: 46px;
             position: sticky;
             top: 0;
-            z-index: 200;
-            background: var(--bg-color);
+            z-index: 100;
+            height: var(--ticker-height);
+            background: var(--bg-body);
             border-bottom: 1px solid var(--border-color);
         }
 
-        /* Navbar */
+        /* Navigation */
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 40px;
+            padding: 0 20px;
+            height: var(--nav-height);
+            background: rgba(5, 5, 5, 0.8);
+            backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border-color);
-            background: var(--nav-bg);
-            backdrop-filter: blur(10px);
             position: sticky;
-            top: 46px; /* Below ticker */
-            z-index: 190;
+            top: var(--ticker-height);
+            z-index: 90;
         }
 
-        .brand {
-            font-size: 1.5rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
+        .brand-logo {
+            font-size: 1.2rem;
+            font-weight: 900;
+            letter-spacing: -0.05em;
             text-transform: uppercase;
         }
-        .brand span { color: var(--accent-gold); }
+        .brand-logo span { color: var(--accent-gold); }
 
-        /* Navbar Right Side Controls */
-        .nav-controls {
+        .nav-actions {
             display: flex;
             align-items: center;
-            gap: 25px;
+            gap: 15px;
         }
 
-        .live-clock {
-            font-family: var(--font-mono);
-            font-size: 0.9rem;
-            color: var(--text-main);
+        .clock-widget {
+            font-family: var(--font-data);
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            display: none; /* Hidden on tiny mobile */
+        }
+
+        .theme-btn {
+            background: none;
             border: 1px solid var(--border-color);
-            padding: 5px 10px;
-            border-radius: 4px;
-        }
-
-        .theme-toggle {
-            cursor: pointer;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            font-weight: 600;
-            color: var(--text-muted);
-            transition: color 0.3s;
-        }
-        .theme-toggle:hover { color: var(--accent-gold); }
-
-        .live-indicator {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.8rem;
-            color: var(--up-color);
-            font-weight: 600;
-        }
-
-        .dot {
-            width: 8px;
-            height: 8px;
-            background-color: var(--up-color);
+            color: var(--text-primary);
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
-            animation: pulse 2s infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            cursor: pointer;
         }
 
-        /* Layout Grid */
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 20px;
+        /* =========================================
+           3. DASHBOARD GRID (Responsive)
+           ========================================= */
+        .dashboard-grid {
+            max-width: 1440px;
+            margin: 20px auto;
+            padding: 0 15px;
             display: grid;
+            gap: 15px;
+            /* Default Mobile: 1 Column */
             grid-template-columns: 1fr;
-            gap: 20px;
         }
 
+        /* Card Styling */
         .market-card {
-            background-color: var(--card-bg);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2px; /* Slight inner border look */
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .card-label {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 10;
+            background: var(--bg-panel);
+            padding: 4px 8px;
+            font-size: 0.7rem;
+            font-family: var(--font-data);
             border: 1px solid var(--border-color);
             border-radius: 4px;
-            overflow: hidden;
-            position: relative;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            pointer-events: none; /* Let clicks pass through to chart */
         }
 
-        .market-card:hover {
-            transform: translateY(-2px);
-            border-color: var(--accent-gold);
+        /* HEIGHTS CONFIGURATION */
+        /* Mobile Heights (Optimized for scrolling) */
+        .card-hero { height: 400px; }
+        .card-standard { height: 350px; }
+
+        /* Desktop Layout (Tablets & Up) */
+        @media (min-width: 768px) {
+            .dashboard-grid {
+                /* 2 Columns */
+                grid-template-columns: 1fr 1fr;
+                padding: 0 20px;
+            }
+            .card-hero {
+                grid-column: 1 / -1; /* Full width */
+                height: 550px;
+            }
+            .card-standard {
+                height: 450px;
+            }
+            .clock-widget { display: block; }
         }
 
-        .hero-section { height: 600px; }
-        .split-section { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; height: 500px; }
-        .lower-section { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; height: 400px; }
+        /* Large Desktop */
+        @media (min-width: 1200px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            /* Row 1: Gold (2/3 width) + Silver (1/3 width) */
+            .card-hero { grid-column: span 2; height: 600px; }
+            #silver-section { grid-column: span 1; height: 600px; }
+            
+            /* Row 2: Nifty, Dow, Nasdaq */
+            .card-standard { height: 400px; }
+        }
+
+        /* TradingView Fixes */
         .tradingview-widget-container { width: 100%; height: 100%; }
 
         /* Footer */
-        footer {
+        .footer-bar {
             text-align: center;
-            padding: 40px;
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            border-top: 1px solid var(--border-color);
-            margin-top: 40px;
+            font-family: var(--font-data);
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-top: 20px;
+            opacity: 0.7;
         }
 
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(34, 171, 148, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(34, 171, 148, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(34, 171, 148, 0); }
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .split-section, .lower-section { grid-template-columns: 1fr; height: auto; }
-            .hero-section, .market-card { height: 400px; }
-            nav { padding: 15px 20px; flex-direction: column; gap: 10px;}
-            .nav-controls { width: 100%; justify-content: space-between; }
-        }
     </style>
 </head>
 <body>
 
     <!-- =======================
-         INTRO SEQUENCE
+         1. SECURITY INTRO
          ======================= -->
     <div id="intro-layer">
         
-        <!-- STEP 1: WARNING -->
-        <div id="step-warning" class="intro-content">
-            <div class="warning-box">
-                <div class="warning-title">⚠ Restricted Access</div>
-                <p class="warning-text">
-                    This portal contains live financial data from COMEX, NSE, and NASDAQ.<br>
-                    Unauthorized access is prohibited. All activities are monitored.
-                </p>
-                <button class="btn" onclick="goToStep2()">Enter Portal</button>
+        <!-- STEP 1: VERIFICATION -->
+        <div id="step-verify" class="intro-container">
+            <div class="security-badge">Secure Connection Request</div>
+            <h2 class="intro-title">Identity Verification Required</h2>
+            <p style="color:var(--text-secondary); margin-bottom:20px; font-size: 0.9rem;">
+                Are you <strong>Deepak Singh</strong>?
+            </p>
+            
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="verifyIdentity(true)">Yes</button>
+                <button class="btn btn-danger" onclick="verifyIdentity(false)">No</button>
             </div>
         </div>
 
-        <!-- STEP 2: IDENTITY -->
-        <div id="step-identity" class="intro-content">
-            <h1 class="identity-question">Are you Deepak Singh?</h1>
-            <div style="margin-top: 30px;">
-                <button class="btn" onclick="finalizeIntro(true)">Yes</button>
-                <button class="btn btn-danger" onclick="finalizeIntro(false)">No</button>
-            </div>
-        </div>
-
-        <!-- STEP 3: WELCOME MESSAGE -->
-        <div id="step-welcome" class="intro-content">
-            <h1 class="welcome-msg" id="dynamic-greeting"></h1>
-            <p class="sub-welcome">> ESTABLISHING SECURE CONNECTION...</p>
+        <!-- STEP 2: WELCOME -->
+        <div id="step-welcome" class="intro-container">
+            <div id="welcome-message" class="welcome-text"></div>
+            <p style="font-family: var(--font-data); color: var(--accent-gold); margin-top: 10px;">
+                > INITIALIZING MARKET DATA...
+            </p>
         </div>
 
     </div>
 
     <!-- =======================
-         MAIN DASHBOARD
+         2. MAIN APPLICATION
          ======================= -->
-    <div id="main-dashboard">
+    <div id="app-container">
         
-        <!-- TOP SCROLLING TICKER -->
+        <!-- TICKER TAPE -->
         <div id="ticker-tape">
             <div class="tradingview-widget-container">
                 <div class="tradingview-widget-container__widget"></div>
                 <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
                 {
                     "symbols": [
-                        { "proName": "COMEX:GC1!", "title": "Gold" },
-                        { "proName": "COMEX:SI1!", "title": "Silver" },
+                        { "proName": "COMEX:GC1!", "title": "Gold Futures" },
+                        { "proName": "COMEX:SI1!", "title": "Silver Futures" },
+                        { "proName": "NSE:NIFTY", "title": "Nifty 50" },
                         { "proName": "FX_IDC:USDINR", "title": "USD/INR" },
-                        { "description": "Nifty 50", "proName": "NSE:NIFTY" },
-                        { "description": "Dow Jones", "proName": "DJ:DJI" }
+                        { "proName": "DJ:DJI", "title": "Dow Jones" }
                     ],
                     "showSymbolLogo": true,
                     "colorTheme": "dark",
-                    "isTransparent": true,
+                    "isTransparent": false,
                     "displayMode": "adaptive",
                     "locale": "en"
                 }
@@ -367,30 +359,21 @@
             </div>
         </div>
 
-        <!-- NAVIGATION -->
+        <!-- NAVBAR -->
         <nav>
-            <div class="brand">Anscom <span>Finance</span></div>
-            
-            <div class="nav-controls">
-                <!-- Live Clock -->
-                <div class="live-clock" id="clock">00:00:00</div>
-                
-                <!-- Theme Switcher -->
-                <div class="theme-toggle" onclick="toggleTheme()">
-                    [ Toggle Theme ]
-                </div>
-
-                <div class="live-indicator">
-                    <div class="dot"></div>
-                    LIVE
-                </div>
+            <div class="brand-logo">Anscom <span>Finance</span></div>
+            <div class="nav-actions">
+                <div class="clock-widget" id="live-clock">--:-- IST</div>
+                <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle Theme">☀</button>
             </div>
         </nav>
 
-        <div class="container">
+        <!-- DASHBOARD GRID -->
+        <div class="dashboard-grid">
             
-            <!-- HERO: GOLD -->
-            <div class="market-card hero-section" id="card-gold">
+            <!-- 1. GOLD (Primary Hero) -->
+            <div class="market-card card-hero">
+                <div class="card-label">GOLD (XAUUSD)</div>
                 <div class="tradingview-widget-container">
                     <div class="tradingview-widget-container__widget"></div>
                     <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
@@ -416,224 +399,191 @@
                         "lineWidth": 2,
                         "upColor": "#22ab94",
                         "downColor": "#f7525f",
-                        "backgroundColor": "rgba(0,0,0,0)" 
+                        "backgroundColor": "rgba(0,0,0,0)"
                     }
                     </script>
                 </div>
             </div>
 
-            <!-- SPLIT: SILVER & NIFTY -->
-            <div class="split-section">
-                <div class="market-card" id="card-silver">
-                    <div class="tradingview-widget-container">
-                        <div class="tradingview-widget-container__widget"></div>
-                        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
-                        {
-                            "symbols": [["OANDA:XAGUSD|1D"]],
-                            "chartOnly": false,
-                            "width": "100%",
-                            "height": "100%",
-                            "locale": "en",
-                            "colorTheme": "dark",
-                            "autosize": true,
-                            "showVolume": false,
-                            "showMA": false,
-                            "scalePosition": "right",
-                            "scaleMode": "Normal",
-                            "fontFamily": "Inter, sans-serif",
-                            "fontSize": "10",
-                            "valuesTracking": "1",
-                            "changeMode": "price-and-percent",
-                            "chartType": "area",
-                            "backgroundColor": "rgba(0,0,0,0)"
-                        }
-                        </script>
-                    </div>
-                </div>
-
-                <div class="market-card" id="card-nifty">
-                    <div class="tradingview-widget-container">
-                        <div class="tradingview-widget-container__widget"></div>
-                        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
-                        {
-                            "symbols": [["NSE:NIFTY|1D"]],
-                            "chartOnly": false,
-                            "width": "100%",
-                            "height": "100%",
-                            "locale": "en",
-                            "colorTheme": "dark",
-                            "autosize": true,
-                            "showVolume": false,
-                            "showMA": false,
-                            "scalePosition": "right",
-                            "scaleMode": "Normal",
-                            "fontFamily": "Inter, sans-serif",
-                            "fontSize": "10",
-                            "valuesTracking": "1",
-                            "changeMode": "price-and-percent",
-                            "chartType": "area",
-                            "backgroundColor": "rgba(0,0,0,0)"
-                        }
-                        </script>
-                    </div>
+            <!-- 2. SILVER -->
+            <div class="market-card card-standard" id="silver-section">
+                <div class="card-label">SILVER (XAGUSD)</div>
+                <div class="tradingview-widget-container">
+                    <div class="tradingview-widget-container__widget"></div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
+                    {
+                        "symbols": [["OANDA:XAGUSD|1D"]],
+                        "chartOnly": false,
+                        "width": "100%",
+                        "height": "100%",
+                        "locale": "en",
+                        "colorTheme": "dark",
+                        "autosize": true,
+                        "showVolume": false,
+                        "hideDateRanges": true, 
+                        "scalePosition": "right",
+                        "fontFamily": "Inter, sans-serif",
+                        "chartType": "area",
+                        "backgroundColor": "rgba(0,0,0,0)"
+                    }
+                    </script>
                 </div>
             </div>
 
-            <!-- LOWER: US MARKETS -->
-            <div class="lower-section">
-                <div class="market-card" id="card-us1">
-                    <div class="tradingview-widget-container">
-                        <div class="tradingview-widget-container__widget"></div>
-                        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
-                        {
-                            "symbols": [["DJ:DJI|1D"]],
-                            "chartOnly": false,
-                            "width": "100%",
-                            "height": "100%",
-                            "locale": "en",
-                            "colorTheme": "dark",
-                            "autosize": true,
-                            "showVolume": false,
-                            "showMA": false,
-                            "scalePosition": "right",
-                            "scaleMode": "Normal",
-                            "fontFamily": "Inter, sans-serif",
-                            "fontSize": "10",
-                            "valuesTracking": "1",
-                            "changeMode": "price-and-percent",
-                            "chartType": "area",
-                            "backgroundColor": "rgba(0,0,0,0)"
-                        }
-                        </script>
-                    </div>
+            <!-- 3. NIFTY 50 -->
+            <div class="market-card card-standard">
+                <div class="card-label">NIFTY 50 (NSE)</div>
+                <div class="tradingview-widget-container">
+                    <div class="tradingview-widget-container__widget"></div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
+                    {
+                        "symbols": [["NSE:NIFTY|1D"]],
+                        "chartOnly": false,
+                        "width": "100%",
+                        "height": "100%",
+                        "locale": "en",
+                        "colorTheme": "dark",
+                        "autosize": true,
+                        "showVolume": false,
+                        "hideDateRanges": true,
+                        "scalePosition": "right",
+                        "fontFamily": "Inter, sans-serif",
+                        "chartType": "area",
+                        "backgroundColor": "rgba(0,0,0,0)"
+                    }
+                    </script>
                 </div>
+            </div>
 
-                <div class="market-card" id="card-us2">
-                    <div class="tradingview-widget-container">
-                        <div class="tradingview-widget-container__widget"></div>
-                        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
-                        {
-                            "symbols": [["NASDAQ:NDX|1D"]],
-                            "chartOnly": false,
-                            "width": "100%",
-                            "height": "100%",
-                            "locale": "en",
-                            "colorTheme": "dark",
-                            "autosize": true,
-                            "showVolume": false,
-                            "showMA": false,
-                            "scalePosition": "right",
-                            "scaleMode": "Normal",
-                            "fontFamily": "Inter, sans-serif",
-                            "fontSize": "10",
-                            "valuesTracking": "1",
-                            "changeMode": "price-and-percent",
-                            "chartType": "area",
-                            "backgroundColor": "rgba(0,0,0,0)"
-                        }
-                        </script>
-                    </div>
+            <!-- 4. DOW JONES -->
+            <div class="market-card card-standard">
+                <div class="card-label">DOW JONES (US)</div>
+                <div class="tradingview-widget-container">
+                    <div class="tradingview-widget-container__widget"></div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
+                    {
+                        "symbols": [["DJ:DJI|1D"]],
+                        "chartOnly": false,
+                        "width": "100%",
+                        "height": "100%",
+                        "locale": "en",
+                        "colorTheme": "dark",
+                        "autosize": true,
+                        "showVolume": false,
+                        "hideDateRanges": true,
+                        "scalePosition": "right",
+                        "fontFamily": "Inter, sans-serif",
+                        "chartType": "area",
+                        "backgroundColor": "rgba(0,0,0,0)"
+                    }
+                    </script>
+                </div>
+            </div>
+
+             <!-- 5. NASDAQ -->
+             <div class="market-card card-standard">
+                <div class="card-label">NASDAQ (NDX)</div>
+                <div class="tradingview-widget-container">
+                    <div class="tradingview-widget-container__widget"></div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
+                    {
+                        "symbols": [["NASDAQ:NDX|1D"]],
+                        "chartOnly": false,
+                        "width": "100%",
+                        "height": "100%",
+                        "locale": "en",
+                        "colorTheme": "dark",
+                        "autosize": true,
+                        "showVolume": false,
+                        "hideDateRanges": true,
+                        "scalePosition": "right",
+                        "fontFamily": "Inter, sans-serif",
+                        "chartType": "area",
+                        "backgroundColor": "rgba(0,0,0,0)"
+                    }
+                    </script>
                 </div>
             </div>
 
         </div>
 
-        <footer>
-            <p>© 2024 Anscom Finance. Professional Data Feeds.</p>
-        </footer>
+        <div class="footer-bar">
+            SYSTEM STATUS: OPERATIONAL | ANSCOM FINANCE
+        </div>
     </div>
 
-    <!-- LOGIC & ANIMATION -->
+    <!-- LOGIC -->
     <script>
-        gsap.registerPlugin();
-
-        // --- 1. INTRO LOGIC ---
-        function goToStep2() {
-            gsap.to("#step-warning", {
-                opacity: 0, 
-                y: -20, 
-                duration: 0.5, 
-                onComplete: () => {
-                    document.getElementById("step-warning").style.display = "none";
-                    document.getElementById("step-identity").style.display = "block";
-                    gsap.to("#step-identity", { opacity: 1, y: 0, duration: 0.5 });
-                }
-            });
-        }
-
-        function finalizeIntro(isDeepak) {
-            const greeting = isDeepak 
-                ? "Hello Deepak Singh,<br>Welcome to AnsCom Finance Portal." 
-                : "Hello Guest User,<br>Accessing Public Feed.";
-            
-            document.getElementById("dynamic-greeting").innerHTML = greeting;
-
-            gsap.to("#step-identity", {
-                opacity: 0, 
-                y: -20, 
-                duration: 0.5, 
-                onComplete: () => {
-                    document.getElementById("step-identity").style.display = "none";
-                    document.getElementById("step-welcome").style.display = "block";
-                    
-                    // Animate Welcome Text
-                    gsap.to("#step-welcome", { opacity: 1, duration: 1 });
-                    
-                    // Wait 2.5 seconds, then reveal Dashboard
-                    setTimeout(revealDashboard, 2500);
-                }
-            });
-        }
-
-        // --- 2. DASHBOARD REVEAL ---
-        function revealDashboard() {
-            // Slide up the intro layer curtain
-            gsap.to("#intro-layer", {
-                y: "-100%",
-                duration: 1.2,
-                ease: "power4.inOut",
-                onComplete: () => {
-                    document.getElementById("intro-layer").style.display = "none";
-                }
-            });
-
-            // Reveal Dashboard Content
-            const dashboard = document.getElementById("main-dashboard");
-            dashboard.style.display = "block";
-            
-            const tl = gsap.timeline();
-            tl.to(dashboard, { opacity: 1, duration: 0.5 })
-              .from("#ticker-tape", { y: -50, opacity: 0, duration: 0.8 })
-              .from("nav", { opacity: 0, duration: 0.8 }, "-=0.6")
-              .from(".market-card", {
-                  y: 100,
-                  opacity: 0,
-                  duration: 0.8,
-                  stagger: 0.15,
-                  ease: "back.out(1.2)"
-              }, "-=0.4");
-        }
-
-        // --- 3. CLOCK LOGIC ---
+        // --- CLOCK ---
         function updateClock() {
             const now = new Date();
-            const timeString = now.toLocaleTimeString('en-US', { hour12: false });
-            document.getElementById('clock').innerText = timeString + " IST"; // Assuming IST based on Nifty/Comex interest
+            const time = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('live-clock').innerText = time + " IST";
         }
         setInterval(updateClock, 1000);
         updateClock();
 
-        // --- 4. THEME TOGGLE ---
+        // --- THEME ---
         function toggleTheme() {
             document.body.classList.toggle('light-theme');
-            const btn = document.querySelector('.theme-toggle');
-            if (document.body.classList.contains('light-theme')) {
-                btn.innerText = "[ SWITCH TO NIGHT ]";
-            } else {
-                btn.innerText = "[ SWITCH TO DAY ]";
-            }
+            const isLight = document.body.classList.contains('light-theme');
+            document.querySelector('.theme-btn').innerText = isLight ? "☾" : "☀";
         }
 
+        // --- INTRO SEQUENCE (GSAP) ---
+        function verifyIdentity(isDeepak) {
+            // 1. Fade out Verify Box
+            gsap.to("#step-verify", {
+                opacity: 0,
+                y: -20,
+                duration: 0.4,
+                onComplete: () => {
+                    document.getElementById("step-verify").style.display = "none";
+                    document.getElementById("step-welcome").style.display = "block";
+                    
+                    // Set Greeting
+                    const name = isDeepak ? "Deepak Singh" : "Guest User";
+                    const greeting = isDeepak ? "Welcome Back" : "Access Granted";
+                    document.getElementById("welcome-message").innerHTML = `${greeting},<br>${name}.`;
+
+                    // 2. Show Welcome
+                    gsap.fromTo("#step-welcome", 
+                        { opacity: 0, scale: 0.9 },
+                        { opacity: 1, scale: 1, duration: 0.8, ease: "back.out(1.7)" }
+                    );
+
+                    // 3. Launch Dashboard after delay
+                    setTimeout(launchDashboard, 2000);
+                }
+            });
+        }
+
+        function launchDashboard() {
+            // Slide up the black curtain
+            gsap.to("#intro-layer", {
+                y: "-100%",
+                duration: 1.0,
+                ease: "expo.inOut",
+                onComplete: () => { document.getElementById("intro-layer").style.display = "none"; }
+            });
+
+            // Reveal App
+            const app = document.getElementById("app-container");
+            app.style.opacity = 1;
+
+            // Staggered Entrance for Cards
+            gsap.from(".market-card", {
+                y: 60,
+                opacity: 0,
+                duration: 1,
+                stagger: 0.1,
+                ease: "power3.out",
+                delay: 0.4
+            });
+
+            // Navbar slide down
+            gsap.from("nav", { y: -50, opacity: 0, duration: 0.8, delay: 0.2 });
+        }
     </script>
 </body>
 </html>
