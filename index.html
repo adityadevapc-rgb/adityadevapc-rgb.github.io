@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anscom Finance | Global Market Intelligence</title>
+    
+    <!-- Google Fonts: Inter for that clean Financial Look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <!-- GSAP for World-Class Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #000000;
+            --card-bg: #0F0F0F; /* Matches TradingView Widget BG */
+            --accent-gold: #D4AF37;
+            --text-main: #EAEAEA;
+            --text-muted: #888888;
+            --border-color: #222222;
+            --up-color: #22ab94;
+            --down-color: #f7525f;
+            --font-main: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            overflow-x: hidden;
+        }
+
+        /* --- Header / Navigation --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transform: translateY(-100%); /* Initial state for animation */
+        }
+
+        .brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+
+        .brand span {
+            color: var(--accent-gold);
+        }
+
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--up-color);
+            font-weight: 600;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--up-color);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        /* --- Layout Grid --- */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        /* Widget Container Styling */
+        .market-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px; /* Sharp corners for professional look */
+            overflow: hidden;
+            position: relative;
+            opacity: 0; /* Initial state for animation */
+            transform: translateY(50px); /* Initial state for animation */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .card-header {
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Specific Sizes */
+        .hero-section {
+            height: 600px; /* Big Gold Chart */
+        }
+
+        .split-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            height: 500px;
+        }
+
+        .lower-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            height: 400px;
+        }
+
+        /* TradingView Specific Overrides to ensure fit */
+        .tradingview-widget-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 40px;
+        }
+
+        /* --- Animations --- */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(34, 171, 148, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(34, 171, 148, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(34, 171, 148, 0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .split-section, .lower-section {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            .hero-section, .market-card {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="brand">Anscom <span>Finance</span></div>
+        <div class="live-indicator">
+            <div class="dot"></div>
+            MARKETS OPEN
+        </div>
+    </nav>
+
+    <div class="container">
+        
+        <!-- 1. HERO: GOLD (XAUUSD) -->
+        <div class="market-card hero-section" id="card-gold">
+            <div class="tradingview-widget-container">
+                <div class="tradingview-widget-container__widget"></div>
+                <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
+                {
+                    "symbols": [["OANDA:XAUUSD|1D"]],
+                    "chartOnly": false,
+                    "width": "100%",
+                    "height": "100%",
+                    "locale": "en",
+                    "colorTheme": "dark",
+                    "autosize": true,
+                    "showVolume": false,
+                    "showMA": false,
+                    "hideDateRanges": false,
+                    "hideMarketStatus": false,
+                    "hideSymbolLogo": false,
+                    "scalePosition": "right",
+                    "scaleMode": "Normal",
+                    "fontFamily": "Inter, -apple-system, BlinkMacSystemFont, sans-serif",
+                    "fontSize": "10",
+                    "noTimeScale": false,
+                    "valuesTracking": "1",
+                    "changeMode": "price-and-percent",
+                    "chartType": "area",
+                    "maLineColor": "#2962FF",
+                    "maLineWidth": 1,
+                    "maLength": 9,
+                    "lineWidth": 2,
+                    "lineType": 0,
+                    "dateRanges": [ "1d|1", "1m|30", "3m|60", "12m|1D", "60m|1W", "all|1M" ],
+                    "upColor": "#22ab94",
+                    "downColor": "#f7525f",
+                    "borderUpColor": "#22ab94",
+                    "borderDownColor": "#f7525f",
+                    "wickUpColor": "#22ab94",
+                    "wickDownColor": "#f7525f",
+                    "backgroundColor": "#0F0F0F"
+                }
+                </script>
+            </div>
+        </div>
+
+        <!-- 2. SPLIT: SILVER & NIFTY 50 -->
+        <div class="split-section">
+            <!-- Silver -->
+            <div class="market-card" id="card-silver">
+                <div class="tradingview-widget-container">
+                    <div class="tradingview-widget-container__widget"></div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
+                    {
+                        "symbols": [["OANDA:XAGUSD|1D"]],
+                        "chartOnly": false,
+                        "width": "100%",
+                        "height": "100%",
+                        "locale": "en",
+                        "colorTheme": "dark",
+                        "autosize": true,
+                        "showVolume": false,
+                        "showMA": false,
+                        "hideDateRanges": false,
+                        "hideMarketStatus": false,
+                        "hideSymbolLogo": false,
+                        "scalePosition": "right",
+                        "scaleMode": "Normal",
+                        "fontFamily": "Inter, sans-serif",
+                        "fontSize": "10",
+                        "noTimeScale": false,
+                        "valuesTracking": "1",
+                        "changeMode": "price-and-percent",
+                        "chartType": "area",
+                        "backgroundColor": "#0F0F0F"
+                    }
+                    </script>
+                </div>
+            </div>
+
+            <!-- Nifty 50 -->
+            <div class="market-card" id="card-nifty">
+                <div class="tradingview-widget-container">
+                    <div class="tradingview-widget-container__widget"></div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
+                    {
+                        "symbols": [["NSE:NIFTY|1D"]],
+                        "chartOnly": false,
+                        "width": "100%",
+                        "height": "100%",
+                        "locale": "en",
+                        "colorTheme": "dark",
+                        "autosize": true,
+                        "showVolume": false,
+                        "showMA": false,
+                        "hideDateRanges": false,
+                        "hideMarketStatus": false,
+                        "hideSymbolLogo": false,
+                        "scalePosition": "right",
+                        "scaleMode": "Normal",
+                        "fontFamily": "Inter, sans-serif",
+                        "fontSize": "10",
+                        "noTimeScale": false,
+                        "valuesTracking": "1",
+                        "changeMode": "price-and-percent",
+                        "chartType": "area",
+                        "backgroundColor": "#0F0F0F"
+                    }
+                    </script>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. LOWER: US MARKETS (DOW & NASDAQ) -->
+        <div class="lower-section">
+            <!-- Dow Jones -->
+            <div class="market-card" id="card-us1">
+                <div class="tradingview-widget-container">
+                    <div class="tradingview-widget-container__widget"></div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
+                    {
+                        "symbols": [["DJ:DJI|1D"]],
+                        "chartOnly": false,
+                        "width": "100%",
+                        "height": "100%",
+                        "locale": "en",
+                        "colorTheme": "dark",
+                        "autosize": true,
+                        "showVolume": false,
+                        "showMA": false,
+                        "hideDateRanges": false,
+                        "hideMarketStatus": false,
+                        "hideSymbolLogo": false,
+                        "scalePosition": "right",
+                        "scaleMode": "Normal",
+                        "fontFamily": "Inter, sans-serif",
+                        "fontSize": "10",
+                        "noTimeScale": false,
+                        "valuesTracking": "1",
+                        "changeMode": "price-and-percent",
+                        "chartType": "area",
+                        "backgroundColor": "#0F0F0F"
+                    }
+                    </script>
+                </div>
+            </div>
+
+            <!-- US Composite / Nasdaq -->
+            <div class="market-card" id="card-us2">
+                <div class="tradingview-widget-container">
+                    <div class="tradingview-widget-container__widget"></div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
+                    {
+                        "symbols": [["NASDAQ:NDX|1D"]],
+                        "chartOnly": false,
+                        "width": "100%",
+                        "height": "100%",
+                        "locale": "en",
+                        "colorTheme": "dark",
+                        "autosize": true,
+                        "showVolume": false,
+                        "showMA": false,
+                        "hideDateRanges": false,
+                        "hideMarketStatus": false,
+                        "hideSymbolLogo": false,
+                        "scalePosition": "right",
+                        "scaleMode": "Normal",
+                        "fontFamily": "Inter, sans-serif",
+                        "fontSize": "10",
+                        "noTimeScale": false,
+                        "valuesTracking": "1",
+                        "changeMode": "price-and-percent",
+                        "chartType": "area",
+                        "backgroundColor": "#0F0F0F"
+                    }
+                    </script>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>© 2024 Anscom Finance. Professional Data Feeds.</p>
+    </footer>
+
+    <!-- ANIMATION LOGIC -->
+    <script>
+        document.addEventListener("DOMContentLoaded", (event) => {
+            // Register GSAP
+            gsap.registerPlugin();
+
+            const tl = gsap.timeline();
+
+            // 1. Header slides down smoothly
+            tl.to("#navbar", {
+                y: 0,
+                duration: 1,
+                ease: "power4.out"
+            })
+            // 2. Gold Chart (Hero) scales up and fades in
+            .to("#card-gold", {
+                opacity: 1,
+                y: 0,
+                duration: 1.2,
+                ease: "expo.out",
+                scale: 1 // ensures it looks solid
+            }, "-=0.5") // start before header finishes
+            // 3. Staggered pop-up for the rest of the cards
+            .to([
+                "#card-silver", 
+                "#card-nifty", 
+                "#card-us1", 
+                "#card-us2"
+            ], {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                stagger: 0.2, // Time gap between each pop up
+                ease: "back.out(1.7)" // The "Pop" effect
+            }, "-=0.8");
+        });
+    </script>
+</body>
+</html>
