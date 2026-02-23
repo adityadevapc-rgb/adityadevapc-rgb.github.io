@@ -16,7 +16,7 @@
     <style>
         :root {
             --bg-color: #000000;
-            --card-bg: #0F0F0F; /* Matches TradingView Widget BG */
+            --card-bg: #0F0F0F;
             --accent-gold: #D4AF37;
             --text-main: #EAEAEA;
             --text-muted: #888888;
@@ -39,6 +39,18 @@
             overflow-x: hidden;
         }
 
+        /* --- Ticker Tape Section --- */
+        #ticker-tape {
+            width: 100%;
+            height: 46px; /* Fixed height for standard TV ticker */
+            position: sticky;
+            top: 0;
+            z-index: 200;
+            background: #000;
+            border-bottom: 1px solid var(--border-color);
+            transform: translateY(-100%); /* Hidden initially */
+        }
+
         /* --- Header / Navigation --- */
         nav {
             display: flex;
@@ -48,10 +60,9 @@
             border-bottom: 1px solid var(--border-color);
             background: rgba(0,0,0,0.8);
             backdrop-filter: blur(10px);
-            position: sticky;
-            top: 0;
+            position: relative;
             z-index: 100;
-            transform: translateY(-100%); /* Initial state for animation */
+            opacity: 0; /* Hidden initially */
         }
 
         .brand {
@@ -96,28 +107,17 @@
         .market-card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 4px; /* Sharp corners for professional look */
+            border-radius: 4px;
             overflow: hidden;
             position: relative;
-            opacity: 0; /* Initial state for animation */
-            transform: translateY(50px); /* Initial state for animation */
+            opacity: 0; 
+            transform: translateY(50px);
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .card-header {
-            padding: 10px 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
         }
 
         /* Specific Sizes */
         .hero-section {
-            height: 600px; /* Big Gold Chart */
+            height: 600px;
         }
 
         .split-section {
@@ -134,7 +134,7 @@
             height: 400px;
         }
 
-        /* TradingView Specific Overrides to ensure fit */
+        /* TradingView Specific Overrides */
         .tradingview-widget-container {
             width: 100%;
             height: 100%;
@@ -166,23 +166,64 @@
             .hero-section, .market-card {
                 height: 400px;
             }
+            nav {
+                padding: 15px 20px;
+            }
         }
     </style>
 </head>
 <body>
+
+    <!-- 1. SCROLLING TICKER TAPE (COMEX LIVE DATA) -->
+    <div id="ticker-tape">
+        <div class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+            {
+            "symbols": [
+                {
+                "proName": "COMEX:GC1!",
+                "title": "Gold Futures"
+                },
+                {
+                "proName": "COMEX:SI1!",
+                "title": "Silver Futures"
+                },
+                {
+                "proName": "FX_IDC:USDINR",
+                "title": "USD/INR"
+                },
+                {
+                "description": "Nifty 50",
+                "proName": "NSE:NIFTY"
+                },
+                {
+                "description": "Dow Jones",
+                "proName": "DJ:DJI"
+                }
+            ],
+            "showSymbolLogo": true,
+            "colorTheme": "dark",
+            "isTransparent": false,
+            "displayMode": "adaptive",
+            "locale": "en"
+            }
+            </script>
+        </div>
+    </div>
 
     <!-- Navigation -->
     <nav id="navbar">
         <div class="brand">Anscom <span>Finance</span></div>
         <div class="live-indicator">
             <div class="dot"></div>
-            MARKETS OPEN
+            LIVE FEED
         </div>
     </nav>
 
     <div class="container">
         
-        <!-- 1. HERO: GOLD (XAUUSD) -->
+        <!-- 2. HERO: GOLD (XAUUSD) -->
         <div class="market-card hero-section" id="card-gold">
             <div class="tradingview-widget-container">
                 <div class="tradingview-widget-container__widget"></div>
@@ -208,9 +249,6 @@
                     "valuesTracking": "1",
                     "changeMode": "price-and-percent",
                     "chartType": "area",
-                    "maLineColor": "#2962FF",
-                    "maLineWidth": 1,
-                    "maLength": 9,
                     "lineWidth": 2,
                     "lineType": 0,
                     "dateRanges": [ "1d|1", "1m|30", "3m|60", "12m|1D", "60m|1W", "all|1M" ],
@@ -226,9 +264,8 @@
             </div>
         </div>
 
-        <!-- 2. SPLIT: SILVER & NIFTY 50 -->
+        <!-- 3. SPLIT: SILVER & NIFTY 50 -->
         <div class="split-section">
-            <!-- Silver -->
             <div class="market-card" id="card-silver">
                 <div class="tradingview-widget-container">
                     <div class="tradingview-widget-container__widget"></div>
@@ -260,7 +297,6 @@
                 </div>
             </div>
 
-            <!-- Nifty 50 -->
             <div class="market-card" id="card-nifty">
                 <div class="tradingview-widget-container">
                     <div class="tradingview-widget-container__widget"></div>
@@ -293,9 +329,8 @@
             </div>
         </div>
 
-        <!-- 3. LOWER: US MARKETS (DOW & NASDAQ) -->
+        <!-- 4. LOWER: US MARKETS -->
         <div class="lower-section">
-            <!-- Dow Jones -->
             <div class="market-card" id="card-us1">
                 <div class="tradingview-widget-container">
                     <div class="tradingview-widget-container__widget"></div>
@@ -327,7 +362,6 @@
                 </div>
             </div>
 
-            <!-- US Composite / Nasdaq -->
             <div class="market-card" id="card-us2">
                 <div class="tradingview-widget-container">
                     <div class="tradingview-widget-container__widget"></div>
@@ -369,26 +403,29 @@
     <!-- ANIMATION LOGIC -->
     <script>
         document.addEventListener("DOMContentLoaded", (event) => {
-            // Register GSAP
             gsap.registerPlugin();
 
             const tl = gsap.timeline();
 
-            // 1. Header slides down smoothly
-            tl.to("#navbar", {
+            // 1. Ticker Tape slides down from top
+            tl.to("#ticker-tape", {
                 y: 0,
-                duration: 1,
-                ease: "power4.out"
+                duration: 0.8,
+                ease: "power3.out"
             })
-            // 2. Gold Chart (Hero) scales up and fades in
+            // 2. Navbar fades in gently
+            .to("#navbar", {
+                opacity: 1,
+                duration: 0.5
+            }, "-=0.3")
+            // 3. Hero Gold Chart scales up
             .to("#card-gold", {
                 opacity: 1,
                 y: 0,
-                duration: 1.2,
+                duration: 1.0,
                 ease: "expo.out",
-                scale: 1 // ensures it looks solid
-            }, "-=0.5") // start before header finishes
-            // 3. Staggered pop-up for the rest of the cards
+            }, "-=0.2")
+            // 4. Staggered Pop-up for remaining cards
             .to([
                 "#card-silver", 
                 "#card-nifty", 
@@ -398,9 +435,9 @@
                 opacity: 1,
                 y: 0,
                 duration: 0.8,
-                stagger: 0.2, // Time gap between each pop up
-                ease: "back.out(1.7)" // The "Pop" effect
-            }, "-=0.8");
+                stagger: 0.15,
+                ease: "back.out(1.2)"
+            }, "-=0.6");
         });
     </script>
 </body>
